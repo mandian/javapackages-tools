@@ -1,7 +1,7 @@
 Name:           javapackages-tools
 Version:        0.3.1
 Group:		Development/Java
-Release:        1
+Release:        2
 Summary:        Mandriva macros and scripts for Java packaging support
 
 License:        BSD
@@ -11,7 +11,7 @@ Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{ve
 BuildArch:           noarch
 Requires:            python
 
-Conflicts:           jpackage-utils < 1.7.5-17
+Conflicts:           jpackage-utils < 1.7.5-4.14
 
 %description
 Fedora macros and scripts for Java packaging support
