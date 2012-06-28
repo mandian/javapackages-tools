@@ -1,7 +1,7 @@
 Name:           javapackages-tools
-Version:        0.3.1
+Version:        0.4.0
 Group:		Development/Java
-Release:        2
+Release:        1
 Summary:        Mandriva macros and scripts for Java packaging support
 
 License:        BSD
@@ -32,9 +32,10 @@ install -m0644 -D depgenerators/fileattrs/maven.attr \
 install -m0644 -D depgenerators/fileattrs/osgi.attr \
                   %{buildroot}%{_rpmhome}/fileattrs/osgi.attr
 
-install -pm 644 -D macros.fjava ${RPM_BUILD_ROOT}%{_sysconfdir}/rpm/macros.fjava
+install -pm 644 -D macros.fjava %{buildroot}%{_sysconfdir}/rpm/macros.fjava
 install -dm 755 %{buildroot}%{_javadir}-utils/
 install -pm 644 scripts/maven_depmap.py %{buildroot}%{_javadir}-utils/
+install -pm 644 scripts/pom_editor.sh %{buildroot}%{_javadir}-utils/
 
 
 %files
@@ -43,6 +44,7 @@ install -pm 644 scripts/maven_depmap.py %{buildroot}%{_javadir}-utils/
 %{_rpmhome}/fileattrs/*.attr
 %{_rpmhome}/*.prov
 %{_rpmhome}/*.req
-%{_javadir}-utils/maven_depmap.py*
+%{_javadir}-utils/maven_depmap.py
+%{_javadir}-utils/pom_editor.sh
 %config(noreplace) %{_sysconfdir}/rpm/macros.fjava
 
