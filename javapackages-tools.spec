@@ -1,20 +1,20 @@
-Name:           javapackages-tools
-Version:        0.4.0
+Name:		javapackages-tools
+Version:	0.4.0
 Group:		Development/Java
-Release:        1
-Summary:        Mandriva macros and scripts for Java packaging support
+Release:	2
+Summary:	%{vendor} macros and scripts for Java packaging support
 
-License:        BSD
-URL:            https://fedorahosted.org/javapackages/
-Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
+License:	BSD
+URL:		https://fedorahosted.org/javapackages/
+Source0:	https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
 
-BuildArch:           noarch
-Requires:            python
+BuildArch:	noarch
+Requires:	python
 
-Conflicts:           jpackage-utils < 1.7.5-4.14
+Conflicts:	jpackage-utils < 1.7.5-4.14
 
 %description
-Fedora macros and scripts for Java packaging support
+%{vendor} macros and scripts for Java packaging support
 
 
 %prep
@@ -37,7 +37,6 @@ install -dm 755 %{buildroot}%{_javadir}-utils/
 install -pm 644 scripts/maven_depmap.py %{buildroot}%{_javadir}-utils/
 install -pm 644 scripts/pom_editor.sh %{buildroot}%{_javadir}-utils/
 
-
 %files
 %doc LICENSE
 %dir %{_rpmhome}/fileattrs
@@ -47,4 +46,3 @@ install -pm 644 scripts/pom_editor.sh %{buildroot}%{_javadir}-utils/
 %{_javadir}-utils/maven_depmap.py
 %{_javadir}-utils/pom_editor.sh
 %config(noreplace) %{_sysconfdir}/rpm/macros.fjava
-
