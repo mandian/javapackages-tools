@@ -2,7 +2,7 @@ Summary:	%{vendor} macros and scripts for Java packaging support
 Name:		javapackages-tools
 Version:	0.4.0
 Group:		Development/Java
-Release:	9
+Release:	10
 License:	BSD
 Url:		https://fedorahosted.org/javapackages/
 Source0:	https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
