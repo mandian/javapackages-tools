@@ -1,46 +1,153 @@
-Summary:	%{vendor} macros and scripts for Java packaging support
-Name:		javapackages-tools
-Version:	0.4.0
-Group:		Development/Java
-Release:	10
-License:	BSD
-Url:		https://fedorahosted.org/javapackages/
-Source0:	https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
+Name:           javapackages-tools
+Version:        3.4.2
+Release:        1.0%{?dist}
 
-BuildArch:	noarch
-Requires:	python
-Conflicts:	jpackage-utils < 1.7.5-4.14
+Summary:        Macros and scripts for Java packaging support
+
+License:        BSD
+URL:            https://fedorahosted.org/javapackages/
+Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
+# Missing macros in OpenMandriva
+Source1:        %{name}.macros
+Source2:        %{name}.sh
+
+BuildArch:      noarch
+
+BuildRequires:  jpackage-utils
+BuildRequires:  asciidoc
+BuildRequires:  docbook-style-xsl
+BuildRequires:  xmlto
+BuildRequires:  python-lxml
+BuildRequires:  python-devel
+BuildRequires:  python-setuptools
+BuildRequires:  python-formencode
+%if 0%{?fedora}
+BuildRequires:  scl-utils-build
+%endif
+
+Requires:       coreutils
+Requires:       libxslt
+Requires:       lua
+Requires:       python
+Requires:       python-javapackages = %{version}-%{release}
+
+%rename jpackage-utils
+%rename java-rpmbuild
 
 %description
-%{vendor} macros and scripts for Java packaging support
+This package provides macros and scripts to support Java packaging.
+
+%package -n maven-local
+Summary:        Macros and scripts for Maven packaging support
+Requires:       %{name} = %{version}-%{release}
+Requires:       maven
+Requires:       xmvn >= 1.0.0-0.1
+# POM files needed by maven itself
+Requires:       apache-commons-parent
+Requires:       apache-parent
+Requires:       geronimo-parent-poms
+Requires:       httpcomponents-project
+Requires:       jboss-parent
+Requires:       jvnet-parent
+Requires:       maven-parent
+Requires:       maven-plugins-pom
+Requires:       mojo-parent
+Requires:       objectweb-pom
+Requires:       plexus-components-pom
+Requires:       plexus-pom
+Requires:       plexus-tools-pom
+Requires:       sonatype-oss-parent
+Requires:       weld-parent
+# Common Maven plugins required by almost every build. It wouldn't make
+# sense to explicitly require them in every package built with Maven.
+Requires:       maven-assembly-plugin
+Requires:       maven-compiler-plugin
+Requires:       maven-enforcer-plugin
+Requires:       maven-jar-plugin
+Requires:       maven-javadoc-plugin
+Requires:       maven-resources-plugin
+Requires:       maven-surefire-plugin
+# Tests based on JUnit are very common and JUnit itself is small.
+# Include JUnit provider for Surefire just for convenience.
+Requires:       maven-surefire-provider-junit
+# testng is quite common as well
+Requires:       maven-surefire-provider-testng
+
+%description -n maven-local
+This package provides macros and scripts to support packaging Maven artifacts.
+
+%package -n python-javapackages
+Summary:        Module for handling various files for Java packaging
+Requires:       python-lxml
+
+%description -n python-javapackages
+Module for handling, querying and manipulating of various files for Java
+packaging in Linux distributions
+
+%if 0%{?fedora}
+%package -n fedora-review-plugin-java
+Summary:        fedora-review plugin for checking Java packaging guidelines
+License:        GPLv2+
+Requires:       fedora-review
+
+%description -n fedora-review-plugin-java
+%{summary}.
+%endif
+
 
 %prep
-%setup -qn javapackages-%{version}
+%setup -q -n javapackages-%{version}
 
 %build
+%configure
+sh -x ./build
+pushd python
+%{__python} setup.py build
+popd
 
 %install
-install -m0755 -D depgenerators/maven.prov %{buildroot}%{_rpmhome}/maven.prov
-install -m0755 -D depgenerators/osgi.prov %{buildroot}%{_rpmhome}/osgi.prov
-install -m0755 -D depgenerators/osgi.req %{buildroot}%{_rpmhome}/osgi.req
-# Add the maven poms file attribute entry (rpm >= 4.9.0)
-install -m0644 -D depgenerators/fileattrs/maven.attr \
-	%{buildroot}%{_rpmhome}/fileattrs/maven.attr
-install -m0644 -D depgenerators/fileattrs/osgi.attr \
-	%{buildroot}%{_rpmhome}/fileattrs/osgi.attr
+./install
+sed -e 's/.[17]$/&.gz/' -e 's/.py$/&*/' -i files-*
 
-install -pm 644 -D macros.fjava %{buildroot}%{_sysconfdir}/rpm/macros.fjava
-install -dm 755 %{buildroot}%{_javadir}-utils/
-install -pm 644 scripts/maven_depmap.py %{buildroot}%{_javadir}-utils/
-install -pm 644 scripts/pom_editor.sh %{buildroot}%{_javadir}-utils/
+pushd python
+%{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
+popd
 
-%files
+%if 0%{?fedora}
+%else
+rm -fr %{buildroot}%{_datadir}/fedora-review/plugins
+for f in files-*; do
+    sort -u $f > $f.new
+    mv $f.new $f
+done
+sed -i 's|\(.*\).gz$|\1*|g' files-*
+install -D -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.d/%{name}.macros
+install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
+%endif
+
+%check
+pushd python
+%{__python} setup.py test
+popd
+%if 0%{?fedora}
+pushd test
+%{__python} -m unittest discover -p '*_test.py'
+popd
+%endif
+
+
+%files -f files-common
 %doc LICENSE
-%dir %{_rpmhome}/fileattrs
-%{_rpmhome}/fileattrs/*.attr
-%{_rpmhome}/*.prov
-%{_rpmhome}/*.req
-%{_javadir}-utils/maven_depmap.py
-%{_javadir}-utils/pom_editor.sh
-%config(noreplace) %{_sysconfdir}/rpm/macros.fjava
+%{_sysconfdir}/rpm/macros.d/%{name}.macros
+%{_prefix}/lib/rpm/%{name}.sh
 
+%files -n maven-local -f files-maven
+
+%files -n python-javapackages
+%doc LICENSE
+%{python_sitelib}/javapackages*
+
+%if 0%{?fedora}
+%files -n fedora-review-plugin-java
+%{_datadir}/fedora-review/plugins/*
+%endif
