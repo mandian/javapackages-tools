@@ -23,6 +23,10 @@ BuildRequires:  python-setuptools
 BuildRequires:  python-formencode
 %if 0%{?fedora}
 BuildRequires:  scl-utils-build
+%else
+# avoid circular dependency to generate these from _javapakcages_macros
+Provides:       mvn(com.sun:tools) = SYSTEM
+Provides:       mvn(sun.jdk:jconsole) = SYSTEM
 %endif
 
 Requires:       coreutils
