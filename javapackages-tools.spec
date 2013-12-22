@@ -1,3 +1,5 @@
+%undefine _compress
+%undefine _extension
 Name:           javapackages-tools
 Version:        3.4.1
 Release:        1.0%{?dist}
@@ -29,7 +31,7 @@ Provides:       mvn(sun.jdk:jconsole) = SYSTEM
 %endif
 
 Requires:       coreutils
-Requires:       libxslt
+Requires:       xsltproc
 Requires:       lua
 Requires:       python
 Requires:       python-javapackages = %{version}-%{release}
