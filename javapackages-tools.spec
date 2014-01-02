@@ -2,7 +2,7 @@
 %undefine _extension
 Name:           javapackages-tools
 Version:        3.4.1
-Release:        1.0%{?dist}
+Release:        1.1%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
