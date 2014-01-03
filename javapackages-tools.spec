@@ -2,7 +2,7 @@
 %undefine _extension
 Name:           javapackages-tools
 Version:        3.4.1
-Release:        1.1%{?dist}
+Release:        1.2%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -125,6 +125,8 @@ for f in files-*; do
     mv $f.new $f
 done
 sed -i 's|\(.*\).gz$|\1*|g' files-*
+sed -i 's|/usr/share/xmvn/configuration.xml||' files-maven
+rm -f %{buildroot}/usr/share/xmvn/configuration.xml
 install -D -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.d/%{name}.macros
 install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
 %endif
