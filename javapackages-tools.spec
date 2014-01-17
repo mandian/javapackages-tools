@@ -1,17 +1,19 @@
 %undefine _compress
 %undefine _extension
 Name:           javapackages-tools
-Version:        3.4.1
-Release:        1.4%{?dist}
+Version:        3.4.2
+Release:        3.0%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
 License:        BSD
 URL:            https://fedorahosted.org/javapackages/
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
-# Missing macros in OpenMandriva
 Source1:        %{name}.macros
 Source2:        %{name}.sh
+
+# Backported from upstream commits 61c9ae9 and 322ef52
+Patch0:         0001-Allow-ZIP-files-in-usr-share-java.patch
 
 BuildArch:      noarch
 
@@ -24,6 +26,7 @@ BuildRequires:  python-devel
 BuildRequires:  python-setuptools
 BuildRequires:  python-formencode
 %if 0%{?fedora}
+BuildRequires:  scl-utils-build
 %else
 # avoid circular dependency to generate these from _javapakcages_macros
 Provides:       mvn(com.sun:tools) = SYSTEM
@@ -31,13 +34,22 @@ Provides:       mvn(sun.jdk:jconsole) = SYSTEM
 %endif
 
 Requires:       coreutils
+%if 0%{?fedora}
+Requires:       libxslt
+%else
 Requires:       xsltproc
+%endif
 Requires:       lua
 Requires:       python
 Requires:       python-javapackages = %{version}-%{release}
 
+%if 0%{?fedora}
+Provides:       jpackage-utils = %{version}-%{release}
+Obsoletes:      jpackage-utils < %{version}-%{release}
+%else
 %rename jpackage-utils
 %rename java-rpmbuild
+%endif
 
 %description
 This package provides macros and scripts to support Java packaging.
@@ -57,6 +69,7 @@ Requires:       jvnet-parent
 Requires:       maven-parent
 Requires:       maven-plugins-pom
 Requires:       mojo-parent
+Requires:       objectweb-pom
 Requires:       plexus-components-pom
 Requires:       plexus-pom
 Requires:       plexus-tools-pom
@@ -101,10 +114,11 @@ Requires:       fedora-review
 
 %prep
 %setup -q -n javapackages-%{version}
+%patch0 -p1
 
 %build
 %configure
-sh -x ./build
+./build
 pushd python
 %{__python} setup.py build
 popd
@@ -158,6 +172,22 @@ popd
 
 
 %changelog
+* Tue Jan  7 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.4.2-3
+- Update patch for ZIP files
+
+* Tue Jan  7 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.4.2-2
+- Allow ZIP files in %{_javadir}
+
+* Thu Dec 05 2013 Michal Srb <msrb@redhat.com> - 3.4.2-1
+- Update to upstream bugfix release 3.4.2
+
+* Wed Dec  4 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.4.1-3
+- Add Requires on objectweb-pom
+
+* Tue Nov 19 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.4.1-2
+- Do not create parent dirs for pom.properties
+- Resolves: rhbz#1031769
+
 * Tue Nov 05 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.4.1-1
 - Update to upstream bugfix release 3.4.1
 
