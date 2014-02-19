@@ -1,0 +1,11 @@
+%_rpmconfigdir          /usr/lib/rpm
+%_javapackages_macros %{shrink:\
+%%undefine _compress\
+%%undefine _extension\
+%%global _duplicate_files_terminate_build 0\
+%%global _files_listed_twice_terminate_build 0\
+%%global _nonzero_exit_pkgcheck_terminate_build 0\
+%%global _use_internal_dependency_generator 0\
+%%global __find_requires /usr/lib/rpm/javapackages-tools.sh req\
+%%global __find_provides /usr/lib/rpm/javapackages-tools.sh prov\
+}
