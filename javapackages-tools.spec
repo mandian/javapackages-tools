@@ -22,6 +22,10 @@ BuildRequires:  python-lxml
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
 BuildRequires:  python-formencode
+BuildRequires:  python-six
+BuildRequires:  python-pyxb
+BuildRequires:  python-nose
+BuildRequires:  dia
 %if 0%{?fedora}
 BuildRequires:  scl-utils-build
 %else
