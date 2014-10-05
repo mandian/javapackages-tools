@@ -12,11 +12,6 @@ Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{ve
 Source1:        %{name}.macros
 Source2:        %{name}.sh
 
-%if 0%{?fedora}
-%else
-Patch1:         %{name}-objectweb-asm3-processor.patch
-%endif
-
 BuildArch:      noarch
 
 BuildRequires:  jpackage-utils
@@ -129,6 +124,7 @@ artifact resolution using XMvn resolver.
 
 %prep
 %setup -q -n javapackages-%{version}
+%apply_patches
 
 %build
 %configure
