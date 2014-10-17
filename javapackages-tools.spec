@@ -2,10 +2,10 @@
 %undefine _extension
 Name:           javapackages-tools
 Version:        4.2.0
-Release:        1
+Release:        2
 
 Summary:        Macros and scripts for Java packaging support
-
+Group:			Development/Java
 License:        BSD
 URL:            https://fedorahosted.org/javapackages/
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
@@ -57,6 +57,7 @@ This package provides macros and scripts to support Java packaging.
 
 %package -n maven-local
 Summary:        Macros and scripts for Maven packaging support
+Group:			Development/Java
 Requires:       %{name} = %{version}-%{release}
 Requires:       maven
 Requires:       xmvn >= 1.0.0-0.1
@@ -96,6 +97,7 @@ This package provides macros and scripts to support packaging Maven artifacts.
 
 %package -n python-javapackages
 Summary:        Module for handling various files for Java packaging
+Group:			Development/Java
 Requires:       python-lxml
 
 %description -n python-javapackages
@@ -104,6 +106,7 @@ packaging in Linux distributions
 
 %package -n javapackages-local
 Summary:        Non-essential macros and scripts for Java packaging support
+Group:			Development/Java
 Requires:       %{name} = %{version}-%{release}
 # We want to use OpenJDK 8 for building packages as it is default
 # implementation used in Fedora.  Due to YUM bugs and limitations,
@@ -119,6 +122,7 @@ This package provides non-essential macros and scripts to support Java packaging
 
 %package -n ivy-local
 Summary:        Local mode for Apache Ivy
+Group:			Development/Java
 Requires:       %{name} = %{version}-%{release}
 Requires:       javapackages-local = %{version}-%{release}
 
