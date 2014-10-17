@@ -53,7 +53,8 @@ Obsoletes:      jpackage-utils < %{version}-%{release}
 %endif
 
 %description
-This package provides macros and scripts to support Java packaging.
+This package provides macros and scripts to 
+support Java packaging.
 
 %package -n maven-local
 Summary:        Macros and scripts for Maven packaging support
@@ -93,7 +94,8 @@ Requires:       maven-surefire-provider-junit
 Requires:       maven-surefire-provider-testng
 
 %description -n maven-local
-This package provides macros and scripts to support packaging Maven artifacts.
+This package provides macros and scripts to support 
+packaging Maven artifacts.
 
 %package -n python-javapackages
 Summary:        Module for handling various files for Java packaging
@@ -117,7 +119,8 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       java-1.8.0-openjdk-devel >= 1:1.8
 
 %description -n javapackages-local
-This package provides non-essential macros and scripts to support Java packaging.
+This package provides non-essential macros and scripts to 
+support Java packaging.
 
 
 %package -n ivy-local
