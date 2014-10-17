@@ -21,7 +21,7 @@ BuildRequires:  xmlto
 BuildRequires:  python-lxml
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
-BuildRequires:  python-formencode
+BuildRequires:  python2-formencode
 BuildRequires:  python-six
 BuildRequires:  python-pyxb
 BuildRequires:  python-nose
