@@ -11,6 +11,7 @@ URL:            https://fedorahosted.org/javapackages/
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
 Source1:        %{name}.macros
 Source2:        %{name}.sh
+Patch0:		javapackages-4.2.0-macros.patch
 
 BuildArch:      noarch
 
