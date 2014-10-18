@@ -16,10 +16,10 @@ while read file; do
 done
 
 if [ "x$mvn_list" != x ]; then
-    echo $mvn_list | sed 's/ /\n/g' | python /usr/lib/rpm/maven.$opt
+    echo $mvn_list | sed 's/ /\n/g' | python2 /usr/lib/rpm/maven.$opt
 fi
 if [ "x$osg_list" != x ]; then
-    echo $osg_list | sed 's/ /\n/g' | python /usr/lib/rpm/osgi.$opt
+    echo $osg_list | sed 's/ /\n/g' | python2 /usr/lib/rpm/osgi.$opt
 fi
 if [ $opt = req -a "x$doc_list" != x ]; then
     echo $doc_list | sed 's/ /\n/g' | sh /usr/lib/rpm/javadoc.$opt
