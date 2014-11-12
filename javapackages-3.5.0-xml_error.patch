@@ -1,0 +1,13 @@
+--- javapackages-3.5.0/java-utils/pom_editor.py.orig	2014-11-12 20:02:51.869558656 +0000
++++ javapackages-3.5.0/java-utils/pom_editor.py	2014-11-12 20:03:09.255859875 +0000
+@@ -113,8 +113,8 @@
+     NSMAP = {'pom': 'http://maven.apache.org/POM/4.0.0',
+               'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
+     POM_NS = '{' + NSMAP['pom'] + '}'
+-    XMLNS = ('xmlns="http://maven.apache.org/POM/4.0.0"'
+-    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
++    XMLNS = ('xmlns="http://maven.apache.org/POM/4.0.0" '
++    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+     'xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 '
+     'http://maven.apache.org/xsd/maven-4.0.0.xsd"')
+ 

@@ -2,7 +2,7 @@
 %undefine _extension
 Name:           javapackages-tools
 Version:        3.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -15,6 +15,7 @@ Source2:        %{name}.sh
 %if 0%{?fedora}
 %else
 Patch1:         %{name}-objectweb-asm3-processor.patch
+Patch2:		javapackages-3.5.0-xml_error.patch
 %endif
 
 BuildArch:      noarch
@@ -136,6 +137,7 @@ Requires:       fedora-review
 %if 0%{?fedora}
 %else
 %patch1 -p1
+%patch2 -p1
 %endif
 sed -i 's/python/python2/' etc/macros.xmvn etc/macros.fjava
 
