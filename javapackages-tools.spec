@@ -1,8 +1,8 @@
 %undefine _compress
 %undefine _extension
 Name:           javapackages-tools
-Version:        3.4.2
-Release:        3.2%{?dist}
+Version:        3.5.0
+Release:        1%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -12,8 +12,6 @@ Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{ve
 Source1:        %{name}.macros
 Source2:        %{name}.sh
 
-# Backported from upstream commits 61c9ae9 and 322ef52
-Patch0:         0001-Allow-ZIP-files-in-usr-share-java.patch
 %if 0%{?fedora}
 %else
 Patch1:         %{name}-objectweb-asm3-processor.patch
@@ -97,6 +95,23 @@ Requires:       maven-surefire-provider-testng
 %description -n maven-local
 This package provides macros and scripts to support packaging Maven artifacts.
 
+%package -n ivy-local
+Summary: Local mode for Apache Ivy
+Requires: %{name} = %{version}-%{release}
+Requires: apache-ivy
+Requires: guava
+Requires: maven
+Requires: plexus-classworlds
+Requires: plexus-containers-container-default
+Requires: plexus-utils
+Requires: xbean
+Requires: xmvn
+
+%description -n ivy-local
+This package implements local mode fow Apache Ivy, which allows
+artifact resolution using XMvn resolver.
+
+
 %package -n python-javapackages
 Summary:        Module for handling various files for Java packaging
 Requires:       python2-lxml
@@ -118,7 +133,6 @@ Requires:       fedora-review
 
 %prep
 %setup -q -n javapackages-%{version}
-%patch0 -p1
 %if 0%{?fedora}
 %else
 %patch1 -p1
@@ -170,6 +184,8 @@ popd
 %{_prefix}/lib/rpm/%{name}.sh
 
 %files -n maven-local -f files-maven
+
+%files -n ivy-local -f files-ivy
 
 %files -n python-javapackages
 %doc LICENSE
