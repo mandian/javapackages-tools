@@ -1,2 +1,4 @@
-sources:
+removed_sources:
   javapackages-3.5.0.tar.xz: 432c8048b70c31178af0677caabe2bfb0f052e9e
+sources:
+  javapackages-4.2.0.tar.xz: ffb26edbba9e01e0de73fb51c6c1e1f2072dadf4

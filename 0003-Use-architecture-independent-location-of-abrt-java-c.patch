@@ -1,0 +1,69 @@
+From 97ee162d443fd954208c277c43f7195339b01e8d Mon Sep 17 00:00:00 2001
+From: Jakub Filak <jfilak@redhat.com>
+Date: Thu, 30 Oct 2014 08:36:56 +0100
+Subject: [PATCH 3/6] Use architecture-independent location of
+ abrt-java-connector
+
+The connector's library has been moved to architecture-independent
+directory /usr/lib/abrt-java-connector/, because Java does not
+officially support multilib and having the connector installed the arch
+specific directory was causing us problems if Java package doesn't match
+host architecture (e.g. Java i386 on host x86_64).
+
+Signed-off-by: Jakub Filak <jfilak@redhat.com>
+---
+ build                     | 1 +
+ configure                 | 2 ++
+ java-utils/java-functions | 4 ++--
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/build b/build
+index 3f5631a..336ac2a 100755
+--- a/build
++++ b/build
+@@ -65,6 +65,7 @@ expand()
+         -e "s|%{rundir}|${rundir}|" \
+         -e "s|%{sysconfdir}|${sysconfdir}|" \
+         -e "s|%{pyinterpreter}|${pyinterpreter}|" \
++        -e "s|%{abrtlibdir}|${abrtlibdir}|" \
+         "${1}" >"${target}"
+ }
+ 
+diff --git a/configure b/configure
+index cc8b0a1..ab9388d 100755
+--- a/configure
++++ b/configure
+@@ -69,6 +69,7 @@ jvmprivdir
+ jvmsysconfdir
+ mavenpomdir
+ pyinterpreter
++abrtlibdir
+ "
+ 
+ vars="$vars mavendepmapdir mavendepmapfragdir" # @Deprecated
+@@ -90,6 +91,7 @@ test -z "${rpmconfigdir}" && rpmconfigdir="${prefix}/lib/rpm"
+ 
+ test -z "${m2home}" && m2home="${datadir}/xmvn"
+ test -z "${pyinterpreter}" && set_pyinterpreter
++test -z "${abrtlibdir}" && abrtlibdir="${prefix}/lib/abrt-java-connector"
+ 
+ eval $(sed -n 's/^%_\('"$vars_re"'\)\ *\(.*\)$/\1="\2"/;T;s/%{_\(.*}\)/${\1/;p' macros.d/macros.jpackage)
+ 
+diff --git a/java-utils/java-functions b/java-utils/java-functions
+index c57640f..8397d2c 100644
+--- a/java-utils/java-functions
++++ b/java-utils/java-functions
+@@ -110,8 +110,8 @@ _load_java_conf()
+ 	JAVACMD_OPTS="${java_opts_save}"
+     fi
+ 
+-    if [ "_${JAVA_ABRT}" != "_off" ] && [ -f %{libdir}/libabrt-java-connector.so ] && [ -f %{rundir}/abrt/abrtd.pid ]; then
+-	JAVACMD_OPTS="${JAVACMD_OPTS} -agentpath:%{libdir}/libabrt-java-connector.so=abrt=on"
++    if [ "_${JAVA_ABRT}" != "_off" ] && [ -f %{abrtlibdir}/libabrt-java-connector.so ] && [ -f %{rundir}/abrt/abrtd.pid ]; then
++	JAVACMD_OPTS="${JAVACMD_OPTS} -agentpath:%{abrtlibdir}/libabrt-java-connector.so=abrt=on"
+     fi
+ }
+ 
+-- 
+1.9.3
+

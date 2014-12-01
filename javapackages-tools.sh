@@ -4,9 +4,11 @@ mvn_list=
 osg_list=
 doc_list=
 opt=$1
+export RPM_BUILD_ROOT=$2
+builddir=$3
 while read file; do
     case "$file" in
-    	*/usr/share/maven-fragments/*)
+    	*/usr/share/maven-metadata/*)
 	    mvn_list="$mvn_list $file"	;;
 	*.jar|*/MANIFEST.MF)
 	    osg_list="$osg_list $file"	;;
@@ -16,11 +18,11 @@ while read file; do
 done
 
 if [ "x$mvn_list" != x ]; then
-    echo $mvn_list | sed 's/ /\n/g' | python2 /usr/lib/rpm/maven.$opt
+    echo $mvn_list | sed 's/ /\n/g' | python /usr/lib/rpm/maven.$opt $builddir
 fi
 if [ "x$osg_list" != x ]; then
-    echo $osg_list | sed 's/ /\n/g' | python2 /usr/lib/rpm/osgi.$opt
+    echo $osg_list | sed 's/ /\n/g' | python /usr/lib/rpm/osgi.$opt $builddir
 fi
 if [ $opt = req -a "x$doc_list" != x ]; then
-    echo $doc_list | sed 's/ /\n/g' | sh /usr/lib/rpm/javadoc.$opt
+    echo $doc_list | sed 's/ /\n/g' | python /usr/lib/rpm/javadoc.$opt
 fi

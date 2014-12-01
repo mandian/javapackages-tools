@@ -1,0 +1,26 @@
+From eafaa146aace0885d17ff472db0a63aef75f2ce5 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Thu, 18 Sep 2014 10:48:07 +0200
+Subject: [PATCH 1/6] [mvn_artifact] Append dependencies to metadata, if we
+ have them
+
+---
+ java-utils/mvn_artifact.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/java-utils/mvn_artifact.py b/java-utils/mvn_artifact.py
+index ae17f9f..78074f0 100644
+--- a/java-utils/mvn_artifact.py
++++ b/java-utils/mvn_artifact.py
+@@ -301,6 +301,8 @@ if __name__ == "__main__":
+         mvn_deps = gather_dependencies(pom_path)
+         for d in mvn_deps:
+             deps.append(MetadataDependency.from_mvn_dependency(d))
++        if deps:
++            art.dependencies = set(deps)
+     else:
+         art.properties['xmvn.resolver.disableEffectivePom'] = 'true'
+ 
+-- 
+1.9.3
+

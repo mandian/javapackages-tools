@@ -1,0 +1,26 @@
+From 135a8ac0b704a39c4b5fb74025bf6440a16531af Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Fri, 28 Nov 2014 08:37:09 +0100
+Subject: [PATCH 6/6] Scan lib64/ in OSGi dep generators
+
+Java is exempt from multilib and that's why most of Java packages
+install their arch-dependant stuff in /usr/lib/, not %{_libdir}.
+Eclipse is an exception here - on some architectures it installs its
+bundles in /usr/lib64/.
+---
+ depgenerators/fileattrs/osgi.attr | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/depgenerators/fileattrs/osgi.attr b/depgenerators/fileattrs/osgi.attr
+index edacd4d..6d8860a 100644
+--- a/depgenerators/fileattrs/osgi.attr
++++ b/depgenerators/fileattrs/osgi.attr
+@@ -2,4 +2,4 @@
+ %__osgi_provides_opts	%{_builddir}/%{?buildsubdir}
+ %__osgi_requires	%{_rpmconfigdir}/osgi.req
+ %__osgi_requires_opts	%{_builddir}/%{?buildsubdir}
+-%__osgi_path	^(.*\\.jar|((%{_prefix}/lib|%{_datadir})/.*/META-INF/MANIFEST.MF))$
++%__osgi_path	^(.*\\.jar|((%{_prefix}/lib(64)?|%{_datadir})/.*/META-INF/MANIFEST.MF))$
+-- 
+1.9.3
+

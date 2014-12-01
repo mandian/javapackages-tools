@@ -1,58 +1,51 @@
-%undefine _compress
-%undefine _extension
 Name:           javapackages-tools
-Version:        3.5.0
-Release:        2%{?dist}
+Version:        4.2.0
+Release:        11%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
 License:        BSD
-URL:            https://fedorahosted.org/javapackages/
+URL:            https://git.fedorahosted.org/git/javapackages.git
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
 Source1:        %{name}.macros
 Source2:        %{name}.sh
+Patch0:         0001-mvn_artifact-Append-dependencies-to-metadata-if-we-h.patch
+Patch1:         0001-metadata-Read-OSGi-Requires-from-manifest-only-if-os.patch
+Patch2:         0001-pom_editor-Fix-missing-space-between-xmlns-declarati.patch
+Patch3:         0002-Use-wrapper-script-to-inject-extra-JVM-arguments.patch
+Patch4:         0003-Use-architecture-independent-location-of-abrt-java-c.patch
+Patch5:         0001-fix-rhbz1155185.patch
+Patch6:         0004-Make-sure-_libdir-is-not-use.patch
+Patch7:         0005-Improve-patterns-for-matching-OSGi-manifests.patch
+Patch8:         0006-Scan-lib64-in-OSGi-dep-generators.patch
 
-%if 0%{?fedora}
-%else
-Patch1:         %{name}-objectweb-asm3-processor.patch
-Patch2:		javapackages-3.5.0-xml_error.patch
-%endif
+# we need the macros in a different place in omv
+Patch100:	javapackages-4.2.0-macros.patch
 
 BuildArch:      noarch
 
-BuildRequires:  jpackage-utils
+BuildRequires:  python-devel
+BuildRequires:  python-lxml
+BuildRequires:  python-setuptools
+BuildRequires:  python-nose
+BuildRequires:  python-six
+BuildRequires:  python-pyxb
 BuildRequires:  asciidoc
-BuildRequires:  docbook-style-xsl
 BuildRequires:  xmlto
-BuildRequires:  python2-lxml
-BuildRequires:  python2-devel
-BuildRequires:  python2-setuptools
-BuildRequires:  python2-formencode
-%if 0%{?fedora}
-BuildRequires:  scl-utils-build
-%else
-# avoid circular dependency to generate these from _javapakcages_macros
-Provides:       mvn(com.sun:tools) = SYSTEM
-Provides:       mvn(sun.jdk:jconsole) = SYSTEM
-%endif
+BuildRequires:  dia
+BuildRequires:  javapackages-tools
+BuildRequires:  xmvn-resolve >= 2
 
 Requires:       coreutils
-%if 0%{?fedora}
-Requires:       libxslt
-%else
-Requires:       xsltproc
-%endif
 Requires:       lua
-Requires:       python2
 Requires:       python-javapackages = %{version}-%{release}
+Requires:       python
 
-%if 0%{?fedora}
 Provides:       jpackage-utils = %{version}-%{release}
 Obsoletes:      jpackage-utils < %{version}-%{release}
-%else
-%rename jpackage-utils
-%rename java-rpmbuild
-%endif
+
+Provides:       mvn(com.sun:tools)
+Provides:       mvn(sun.jdk:jconsole)
 
 %description
 This package provides macros and scripts to support Java packaging.
@@ -60,8 +53,11 @@ This package provides macros and scripts to support Java packaging.
 %package -n maven-local
 Summary:        Macros and scripts for Maven packaging support
 Requires:       %{name} = %{version}-%{release}
+Requires:       javapackages-local = %{version}-%{release}
 Requires:       maven
-Requires:       xmvn >= 1.0.0-0.1
+Requires:       xmvn >= 2
+Requires:       xmvn-mojo >= 2
+Requires:       xmvn-connector-aether >= 2
 # POM files needed by maven itself
 Requires:       apache-commons-parent
 Requires:       apache-parent
@@ -97,56 +93,64 @@ Requires:       maven-surefire-provider-testng
 This package provides macros and scripts to support packaging Maven artifacts.
 
 %package -n ivy-local
-Summary: Local mode for Apache Ivy
-Requires: %{name} = %{version}-%{release}
-Requires: apache-ivy
-Requires: guava
-Requires: maven
-Requires: plexus-classworlds
-Requires: plexus-containers-container-default
-Requires: plexus-utils
-Requires: xbean
-Requires: xmvn
+Summary:        Local mode for Apache Ivy
+Requires:       %{name} = %{version}-%{release}
+Requires:       javapackages-local = %{version}-%{release}
+Requires:       apache-ivy >= 2.3.0-8
+Requires:       xmvn-connector-ivy >= 2
 
 %description -n ivy-local
 This package implements local mode fow Apache Ivy, which allows
 artifact resolution using XMvn resolver.
 
-
 %package -n python-javapackages
 Summary:        Module for handling various files for Java packaging
-Requires:       python2-lxml
+Requires:       python-pyxb = 1.2.4
+Requires:       python-lxml
+Requires:       python-six
+Obsoletes:      python3-javapackages < %{version}-%{release}
 
 %description -n python-javapackages
 Module for handling, querying and manipulating of various files for Java
 packaging in Linux distributions
 
-%if 0%{?fedora}
-%package -n fedora-review-plugin-java
-Summary:        fedora-review plugin for checking Java packaging guidelines
-License:        GPLv2+
-Requires:       fedora-review
+%package doc
+Summary:        Guide for Java packaging
 
-%description -n fedora-review-plugin-java
-%{summary}.
-%endif
+%description doc
+User guide for Java packaging and using utilities from javapackages-tools
 
+%package -n javapackages-local
+Summary:        Non-essential macros and scripts for Java packaging support
+Requires:       %{name} = %{version}-%{release}
+Requires:       xmvn-install >= 2
+Requires:       xmvn-subst >= 2
+Requires:       xmvn-resolve >= 2
+
+%description -n javapackages-local
+This package provides non-essential macros and scripts to support Java
+packaging.
 
 %prep
 %setup -q -n javapackages-%{version}
-%if 0%{?fedora}
-%else
+
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%endif
-sed -i 's/python/python2/' etc/macros.xmvn etc/macros.fjava
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch100 -p1
 
 %build
-export PYTHON=%__python2
 %configure
 ./build
+
 pushd python
-%{__python2} setup.py build
+%{__python} setup.py build
 popd
 
 %install
@@ -154,7 +158,7 @@ popd
 sed -e 's/.[17]$/&.gz/' -e 's/.py$/&*/' -i files-*
 
 pushd python
-%{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT
+%{__python} setup.py install -O1 --skip-build --root %{buildroot}
 popd
 
 %if 0%{?fedora}
@@ -169,21 +173,16 @@ install -D -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.d/%{name}.m
 install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
 %endif
 
-%check
-pushd python
-%{__python2} setup.py test
-popd
-%if 0%{?fedora}
-pushd test
-%{__python2} -m unittest discover -p '*_test.py'
-popd
-%endif
 
+%check
+./check 3
 
 %files -f files-common
 %doc LICENSE
 %{_sysconfdir}/rpm/macros.d/%{name}.macros
 %{_prefix}/lib/rpm/%{name}.sh
+
+%files -n javapackages-local -f files-local
 
 %files -n maven-local -f files-maven
 
@@ -191,15 +190,111 @@ popd
 
 %files -n python-javapackages
 %doc LICENSE
-%{py2_puresitedir}/javapackages*
+%{python_sitelib}/javapackages*
 
-%if 0%{?fedora}
-%files -n fedora-review-plugin-java
-%{_datadir}/fedora-review/plugins/*
-%endif
-
+%files doc -f files-doc
+%doc LICENSE
 
 %changelog
+* Fri Nov 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-11
+- Remove dependency on libxslt
+
+* Fri Nov 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-10
+- Scan lib64/ in OSGi dep generators
+- Related: rhbz#1166156
+
+* Wed Nov 26 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-9
+- Revert adding namespace support in %%mvn_artifact
+
+* Mon Nov 24 2014 Michal Srb <msrb@redhat.com> - 4.2.0-8
+- Add namespace support in %%mvn_artifact
+
+* Fri Nov 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-7
+- Fix OSGi provides/requires generation in Java libdir
+- Resolves: rhbz#1166156
+
+* Wed Nov 12 2014 Michal Srb <msrb@redhat.com> - 4.2.0-6
+- Fix cache problem (Resolves: rhbz#1155185)
+
+* Thu Oct 30 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-5
+- Use wrapper script to inject ABRT agent JVM argument
+- Fix path to ABRT agent DSO
+- Resolves: rhbz#1153652
+
+* Tue Oct 21 2014 Michael Simacek <msimacek@redhat.com> - 4.2.0-4
+- Fix pom_editor missing space between xmlns declarations
+
+* Wed Sep 24 2014 Michal Srb <msrb@redhat.com> - 4.2.0-3
+- Do not generate OSGi R on eclipse-platform
+
+* Thu Sep 18 2014 Michal Srb <msrb@redhat.com> - 4.2.0-2
+- Fix mvn_artifact: generate R, if it's not explicitly disabled
+
+* Thu Jul 24 2014 Michal Srb <msrb@redhat.com> - 4.2.0-1
+- Update to upstream version 4.2.0
+
+* Thu Jul 10 2014 Michal Srb <msrb@redhat.com> - 4.1.0-2
+- Backport upstream patch for maven.req
+
+* Mon Jun 23 2014 Michal Srb <msrb@redhat.com> - 4.1.0-1
+- Update to upstream version 4.1.0
+
+* Thu Jun 12 2014 Michal Srb <msrb@redhat.com> - 4.0.0-8
+- Install man page for pom_change_dep
+
+* Tue Jun 10 2014 Michal Srb <msrb@redhat.com> - 4.0.0-7
+- Backport fix for maven.prov
+
+* Tue Jun 10 2014 Michal Srb <msrb@redhat.com> - 4.0.0-6
+- Update docs
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 30 2014 Michal Srb <msrb@redhat.com> - 4.0.0-4
+- Backport patch which adds support for "disableEffectivePom" property
+
+* Thu May 29 2014 Michal Srb <msrb@redhat.com> - 4.0.0-3
+- Add BR: javapackages-tools
+
+* Thu May 29 2014 Michal Srb <msrb@redhat.com> - 4.0.0-2
+- Backport patches for maven.req
+- Remove com.sun:tools and sun.jdk:jconsole provides
+
+* Thu May 29 2014 Michal Srb <msrb@redhat.com> - 4.0.0-1
+- Update to 4.0.0
+
+* Wed May 28 2014 Michal Srb <msrb@redhat.com> - 3.5.0-9
+- Apply the patch from my previous commit
+
+* Wed May 28 2014 Michal Srb <msrb@redhat.com> - 3.5.0-8
+- Generate requires on POM artifacts with "pom" extension
+
+* Wed Apr 30 2014 Michal Srb <msrb@redhat.com> - 3.5.0-7
+- Improve support for SCLs
+
+* Wed Apr 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.0-6
+- Add explicit maven-local requires on java-1.8.0-openjdk-devel
+
+* Thu Mar 27 2014 Michael Simacek <msimacek@redhat.com> - 3.5.0-6
+- Install documentation
+
+* Mon Feb 24 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.5.0-5
+- Backport java-headless patches
+
+* Mon Feb 10 2014 Michal Srb <msrb@redhat.com> - 3.5.0-4
+- Add support for installing Maven artifacts with .hpi extension
+
+* Fri Jan 17 2014 Michael Simacek <msimacek@redhat.com> - 3.5.0-3
+- Use upstream method of running tests (nosetests)
+
+* Thu Jan 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.0-2
+- Add version requirements on xmvn and ivy
+
+* Thu Jan 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.0-1
+- Update to upstream version 3.5.0
+- Add ivy-local subpackage
+
 * Tue Jan  7 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.4.2-3
 - Update patch for ZIP files
 

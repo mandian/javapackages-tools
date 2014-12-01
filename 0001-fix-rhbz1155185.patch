@@ -1,0 +1,42 @@
+diff --git a/python/javapackages/common/util.py b/python/javapackages/common/util.py
+index 071805f..325650a 100644
+--- a/python/javapackages/common/util.py
++++ b/python/javapackages/common/util.py
+@@ -44,7 +44,7 @@ def kill_parent_process():
+ def get_cachedir(path, create_if_not_exists=True):
+     cachedir_path = os.path.join(path, ".javapackages_cache")
+     if not os.path.exists(cachedir_path) and create_if_not_exists:
+-        os.mkdir(cachedir_path)
++        os.makedirs(cachedir_path)
+     return cachedir_path
+ 
+ 
+diff --git a/python/javapackages/metadata/metadata.py b/python/javapackages/metadata/metadata.py
+index 5b507e3..a0485d1 100644
+--- a/python/javapackages/metadata/metadata.py
++++ b/python/javapackages/metadata/metadata.py
+@@ -250,7 +250,8 @@ class Metadata(object):
+     def _write_cache_file(self, cachefile, content):
+         try:
+             cachefile = open(cachefile, 'wb')
+-            pickle.dump(content, cachefile)
++            cache = (os.getppid(), content)
++            pickle.dump(cache, cachefile)
+             cachefile.close()
+         except IOError:
+             return None
+@@ -260,8 +261,12 @@ class Metadata(object):
+     def _read_cache_file(cachefile):
+         try:
+             cachefile = open(cachefile, 'rb')
+-            content = pickle.load(cachefile)
++            cache = pickle.load(cachefile)
+             cachefile.close()
++            # check if the cache was most likely created during current build
++            if cache[0] != os.getppid():
++                logging.warning("Cache is outdated, skipping")
++                return None
+         except IOError:
+             return None
+-        return content
++        return cache[1]

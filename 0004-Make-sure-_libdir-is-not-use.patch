@@ -1,0 +1,71 @@
+From bd3bfd39508792f91621cba0b6279eeeef4aa866 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Thu, 30 Oct 2014 09:18:08 +0100
+Subject: [PATCH 4/6] Make sure %{_libdir} is not use
+
+Javapackages as noarch package cannot safely reference libdir.
+---
+ build                              | 1 -
+ configure                          | 2 --
+ depgenerators/fileattrs/osgi.attr  | 2 +-
+ python/javapackages/common/osgi.py | 2 +-
+ 4 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/build b/build
+index 336ac2a..67da1b3 100755
+--- a/build
++++ b/build
+@@ -54,7 +54,6 @@ expand()
+ 
+     sed \
+         -e "s|%{bindir}|${bindir}|" \
+-        -e "s|%{libdir}|${libdir}|" \
+         -e "s|%{datadir}|${datadir}|" \
+         -e "s|%{javaconfdir}|${javaconfdir}|" \
+         -e "s|%{javadir}|${javadir}|" \
+diff --git a/configure b/configure
+index ab9388d..da9c9a1 100755
+--- a/configure
++++ b/configure
+@@ -44,7 +44,6 @@ function set_pyinterpreter() {
+ vars="
+ bindir
+ datadir
+-libdir
+ localstatedir
+ mandir
+ prefix
+@@ -82,7 +81,6 @@ eval $(for _; do echo "$_"; done |
+ test -z "${prefix}" && prefix="/usr/local"
+ test -z "${bindir}" && bindir="${prefix}/bin"
+ test -z "${datadir}" && datadir="${prefix}/share"
+-test -z "${libdir}" && libdir="${prefix}/lib"
+ test -z "${localstatedir}" && localstatedir="${prefix}/var"
+ test -z "${mandir}" && mandir="${datadir}/man"
+ test -z "${rundir}" && rundir="${localstatedir}/run"
+diff --git a/depgenerators/fileattrs/osgi.attr b/depgenerators/fileattrs/osgi.attr
+index 58bba2d..f65cb0a 100644
+--- a/depgenerators/fileattrs/osgi.attr
++++ b/depgenerators/fileattrs/osgi.attr
+@@ -2,4 +2,4 @@
+ %__osgi_provides_opts	%{_builddir}/%{?buildsubdir}
+ %__osgi_requires	%{_rpmconfigdir}/osgi.req
+ %__osgi_requires_opts	%{_builddir}/%{?buildsubdir}
+-%__osgi_path	^(.*\\.jar$|((%{_libdir}|%{_datadir}).*/MANIFEST.MF))
++%__osgi_path	^(.*\\.jar$|((%{_prefix}/lib|%{_datadir})/.*/MANIFEST.MF))
+diff --git a/python/javapackages/common/osgi.py b/python/javapackages/common/osgi.py
+index fdfdc3b..a1d72fc 100644
+--- a/python/javapackages/common/osgi.py
++++ b/python/javapackages/common/osgi.py
+@@ -177,7 +177,7 @@ def _check_path(path):
+         # who knows where the manifest can be in buildroot
+         # TODO: improve this check somehow(?)
+         # this is an attempt to identify only MANIFEST.MF files
+-        # which are in %{_datadir} or %{_libdir}
++        # which are in %{_datadir} or %{_prefix}/lib
+         if "/usr/share/" in path or "/usr/lib" in path:
+             return True
+     return False
+-- 
+1.9.3
+
