@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        4.2.0
-Release:        11%{?dist}
+Release:        11.1
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -43,6 +43,7 @@ Requires:       python
 
 Provides:       jpackage-utils = %{version}-%{release}
 Obsoletes:      jpackage-utils < %{version}-%{release}
+%rename java-rpmbuild
 
 Provides:       mvn(com.sun:tools)
 Provides:       mvn(sun.jdk:jconsole)
