@@ -1,7 +1,7 @@
 Name:           javapackages-tools
-Version:        4.2.0
-Release:        11.1
-
+Version:        4.3.0
+Release:        1.1
+Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
 License:        BSD
@@ -9,15 +9,6 @@ URL:            https://git.fedorahosted.org/git/javapackages.git
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
 Source1:        %{name}.macros
 Source2:        %{name}.sh
-Patch0:         0001-mvn_artifact-Append-dependencies-to-metadata-if-we-h.patch
-Patch1:         0001-metadata-Read-OSGi-Requires-from-manifest-only-if-os.patch
-Patch2:         0001-pom_editor-Fix-missing-space-between-xmlns-declarati.patch
-Patch3:         0002-Use-wrapper-script-to-inject-extra-JVM-arguments.patch
-Patch4:         0003-Use-architecture-independent-location-of-abrt-java-c.patch
-Patch5:         0001-fix-rhbz1155185.patch
-Patch6:         0004-Make-sure-_libdir-is-not-use.patch
-Patch7:         0005-Improve-patterns-for-matching-OSGi-manifests.patch
-Patch8:         0006-Scan-lib64-in-OSGi-dep-generators.patch
 
 # we need the macros in a different place in omv
 Patch100:	javapackages-4.2.0-macros.patch
@@ -135,15 +126,6 @@ packaging.
 %prep
 %setup -q -n javapackages-%{version}
 
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
 %patch100 -p1
 
 %build
