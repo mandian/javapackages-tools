@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        4.3.0
-Release:        1.1
+Release:        1.2
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 

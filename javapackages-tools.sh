@@ -18,10 +18,10 @@ while read file; do
 done
 
 if [ "x$mvn_list" != x ]; then
-    echo $mvn_list | sed 's/ /\n/g' | python /usr/lib/rpm/maven.$opt $builddir
+    echo $mvn_list | sed 's/ /\n/g' | python /usr/lib/rpm/maven.$opt --cachedir $builddir
 fi
 if [ "x$osg_list" != x ]; then
-    echo $osg_list | sed 's/ /\n/g' | python /usr/lib/rpm/osgi.$opt $builddir
+    echo $osg_list | sed 's/ /\n/g' | python /usr/lib/rpm/osgi.$opt --cachedir $builddir
 fi
 if [ $opt = req -a "x$doc_list" != x ]; then
     echo $doc_list | sed 's/ /\n/g' | python /usr/lib/rpm/javadoc.$opt
