@@ -4,9 +4,9 @@ mvn_list=
 osg_list=
 doc_list=
 opt=$1
-export RPM_BUILD_ROOT=$2
-builddir=$3
+builddir=$2
 while read file; do
+    if [ -z "$RPM_BUILD_ROOT" ]; then export RPM_BUILD_ROOT=$file; fi
     case "$file" in
     	*/usr/share/maven-metadata/*)
 	    mvn_list="$mvn_list $file"	;;
@@ -15,6 +15,10 @@ while read file; do
     	*/usr/share/javadoc/*)
 	    doc_list="$doc_list $file"	;;
     esac
+done
+
+while [[ "$RPM_BUILD_ROOT" != *buildroot ]] && [[ "$RPM_BUILD_ROOT" != "/" ]]; do
+  export RPM_BUILD_ROOT=$(dirname $RPM_BUILD_ROOT)
 done
 
 if [ "x$mvn_list" != x ]; then
