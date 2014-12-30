@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        4.3.0
-Release:        1.3
+Release:        1.4
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -128,6 +128,7 @@ packaging.
 
 %patch100 -p1
 
+sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
 %configure
 ./build
