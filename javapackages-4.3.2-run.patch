@@ -1,0 +1,12 @@
+--- javapackages-4.3.0/java-utils/java-functions	2014-12-14 20:29:28.000000000 +0000
++++ javapackages-4.4.0/java-utils/java-functions	2015-02-16 13:21:04.000000000 +0000
+@@ -297,8 +297,7 @@
+     fi
+ 
+     # let's start
+-    exec "${JAVACMD}" ${FLAGS} -classpath "${CLASSPATH}" \
+-	${OPTIONS} "${MAIN_CLASS}" "${@}"
++    eval "exec \"\${JAVACMD}\" ${FLAGS} -classpath \"\${CLASSPATH}\" ${OPTIONS} \"\${MAIN_CLASS}\" \"\${@}\""
+ }
+ 
+ # Set JVM-related directories

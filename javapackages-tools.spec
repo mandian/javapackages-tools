@@ -1,7 +1,7 @@
 %bcond_without bootstrap
 
 Name:           javapackages-tools
-Version:        4.3.0
+Version:        4.3.2
 Release:        1.6
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
@@ -14,7 +14,7 @@ Source2:        %{name}.sh
 
 # we need the macros in a different place in omv
 Patch100:	javapackages-4.2.0-macros.patch
-
+Patch101:	javapackages-4.3.2-run.patch
 BuildArch:      noarch
 
 BuildRequires:  python-devel
@@ -131,6 +131,7 @@ packaging.
 %setup -q -n javapackages-%{version}
 
 %patch100 -p1
+%patch101 -p1
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
