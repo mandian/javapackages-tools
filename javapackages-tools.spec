@@ -2,7 +2,7 @@
 
 Name:           javapackages-tools
 Version:        4.3.2
-Release:        1.7
+Release:        1.8
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -15,6 +15,9 @@ Source2:        %{name}.sh
 # we need the macros in a different place in omv
 Patch100:	javapackages-4.2.0-macros.patch
 Patch101:	javapackages-4.3.2-run.patch
+# fix parent remove (by upstream)
+# https://pagure.io/javapackages/raw/84211c0ee761e93ee507f5d37e9fc80ec377e89d
+Patch200:	javapackages-tools-4.3.2-fix_pom_remove_parent.patch
 BuildArch:      noarch
 
 BuildRequires:  python-devel
@@ -132,6 +135,7 @@ packaging.
 
 %patch100 -p1
 %patch101 -p1
+%patch200 -p1
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
