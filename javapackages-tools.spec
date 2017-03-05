@@ -15,6 +15,7 @@ Source2:        %{name}.sh
 # we need the macros in a different place in omv
 Patch100:	javapackages-4.2.0-macros.patch
 Patch101:	javapackages-4.3.2-run.patch
+Patch201:	javapackages-tools-4.3.2-remove_scl.patch
 BuildArch:      noarch
 
 BuildRequires:  python-devel
@@ -132,6 +133,7 @@ packaging.
 
 %patch100 -p1
 %patch101 -p1
+%patch201 -p1
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
