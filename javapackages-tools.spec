@@ -18,6 +18,7 @@ Patch101:	javapackages-4.3.2-run.patch
 # fix parent remove (by upstream)
 # https://pagure.io/javapackages/raw/84211c0ee761e93ee507f5d37e9fc80ec377e89d
 Patch200:	javapackages-tools-4.3.2-fix_pom_remove_parent.patch
+Patch201:	javapackages-tools-4.3.2-remove_scl.patch
 BuildArch:      noarch
 
 BuildRequires:  python-devel
@@ -136,6 +137,7 @@ packaging.
 %patch100 -p1
 %patch101 -p1
 %patch200 -p1
+%patch201 -p1
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
