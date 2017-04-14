@@ -16,9 +16,6 @@ Source2:        %{name}.sh
 Patch100:	javapackages-4.2.0-macros.patch
 Patch101:	javapackages-4.3.2-run.patch
 Patch201:	javapackages-tools-4.3.2-remove_scl.patch
-# fix parent remove (by upstreamer)
-# https://pagure.io/javapackages/raw/84211c0ee761e93ee507f5d37e9fc80ec377e89d
-Patch202:	javapackages-tools-4.3.2-fix_pom_remove_parent.patch
 # Add gradle-local script (by upstreamer, adapted)
 # https://pagure.io/javapackages/raw/769a20eda74b9488bd7f3caac3970984831f8d2b
 Patch300:	javapackages-tools-4.3.2-add_gradle-local_script.patch
@@ -152,7 +149,6 @@ packaging.
 %patch100 -p1
 %patch101 -p1
 %patch201 -p1
-%patch202 -p1
 %patch300 -p1
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
