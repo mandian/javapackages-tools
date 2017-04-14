@@ -2,7 +2,7 @@
 
 Name:           javapackages-tools
 Version:        4.3.2
-Release:        1.8
+Release:        1.8.1
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -19,6 +19,9 @@ Patch101:	javapackages-4.3.2-run.patch
 # https://pagure.io/javapackages/raw/84211c0ee761e93ee507f5d37e9fc80ec377e89d
 Patch200:	javapackages-tools-4.3.2-fix_pom_remove_parent.patch
 Patch201:	javapackages-tools-4.3.2-remove_scl.patch
+# Add gradle-local script (by upstreamer, adapted)
+# https://pagure.io/javapackages/raw/769a20eda74b9488bd7f3caac3970984831f8d2b
+Patch300:	javapackages-tools-4.3.2-add_gradle-local_script.patch
 BuildArch:      noarch
 
 BuildRequires:  python-devel
@@ -103,6 +106,18 @@ Requires:       xmvn-connector-ivy >= 2
 This package implements local mode fow Apache Ivy, which allows
 artifact resolution using XMvn resolver.
 
+%package -n gradle-local
+Summary:        Local mode for Gradle
+Requires:       %{name} = %{version}-%{release}
+Requires:       javapackages-local = %{version}-%{release}
+Requires:       gradle >= 2.2.1
+Requires:       xmvn-connector-gradle >= 2
+
+%description -n gradle-local
+This package implements local mode for Gradle, which allows artifact
+resolution using XMvn resolver.
+
+
 %package -n python-javapackages
 Summary:        Module for handling various files for Java packaging
 Requires:       python-pyxb = 1.2.4
@@ -138,6 +153,7 @@ packaging.
 %patch101 -p1
 %patch200 -p1
 %patch201 -p1
+%patch300 -p1
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
@@ -183,6 +199,8 @@ install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
 %files -n maven-local -f files-maven
 
 %files -n ivy-local -f files-ivy
+
+%files -n gradle-local -f files-gradle
 
 %files -n python-javapackages
 %doc LICENSE
