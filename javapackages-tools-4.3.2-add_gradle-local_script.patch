@@ -1,0 +1,54 @@
+diff --git a/bin/gradle-local b/bin/gradle-local
+new file mode 100755
+index 0000000..7098e2e
+--- /dev/null
++++ b/bin/gradle-local
+@@ -0,0 +1,2 @@
++#!/bin/sh
++exec gradle -I %{datadir}/gradle-local/init.gradle "${@}"
+diff --git a/build b/build
+index 2e0292c..24f1ffd 100755
+--- a/build
++++ b/build
+@@ -77,6 +77,7 @@ expand bin/clean-binary-files
+ expand bin/create-jar-links
+ expand bin/diff-jars
+ expand bin/find-jar
++expand bin/gradle-local
+ expand bin/jvmjar
+ expand bin/mvn-local
+ expand bin/mvn-rpmbuild
+diff --git a/gradle/init.gradle b/gradle/init.gradle
+new file mode 100644
+index 0000000..17c9afe
+--- /dev/null
++++ b/gradle/init.gradle
+@@ -0,0 +1,11 @@
++allprojects {
++    buildscript {
++        repositories {
++            xmvn()
++        }
++    }
++
++    repositories {
++        xmvn()
++    }
++}
+diff --git a/install b/install
+index 2db5685..cb8bfff 100755
+--- a/install
++++ b/install
+@@ -208,6 +208,12 @@ inst_data configs/ivy-local-classpath "${sysconfdir}/ant.d"
+ inst_data configs/ivysettings.xml "${sysconfdir}/ivy"
+ 
+ 
++exec >files-gradle
++
++inst_exec target/gradle-local "${bindir}"
++inst_data gradle/init.gradle "${datadir}/gradle-local"
++
++
+ exec >files-fedora-review
+ inst_data fedora-review/java_guidelines.py "${datadir}/fedora-review/plugins"
+ 
