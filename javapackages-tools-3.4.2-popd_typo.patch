@@ -1,0 +1,11 @@
+--- javapackages-3.4.2/java-utils/java-functions.orig	2017-04-22 14:20:07.508713196 +0100
++++ javapackages-3.4.2/java-utils/java-functions	2017-04-22 14:20:15.228369118 +0100
+@@ -393,7 +393,7 @@
+             _ALLFOUND=1
+          fi
+       done
+-   popd $repository > /dev/null
++   popd > /dev/null
+    return $_ALLFOUND
+ }
+ 

@@ -2,7 +2,7 @@
 %undefine _extension
 Name:           javapackages-tools
 Version:        3.4.2
-Release:        3.1%{?dist}
+Release:        3.2%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -18,6 +18,7 @@ Patch0:         0001-Allow-ZIP-files-in-usr-share-java.patch
 %else
 Patch1:         %{name}-objectweb-asm3-processor.patch
 %endif
+Patch2:		javapackages-tools-3.4.2-popd_typo.patch
 
 BuildArch:      noarch
 
@@ -123,6 +124,7 @@ Requires:       fedora-review
 %else
 %patch1 -p1
 %endif
+%patch2 -p1
 
 %build
 %configure
