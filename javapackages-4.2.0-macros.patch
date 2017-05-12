@@ -1,8 +1,8 @@
---- javapackages-4.2.0/install.orig	2014-10-18 17:22:50.442097972 +0100
-+++ javapackages-4.2.0/install	2014-10-18 17:23:41.828094187 +0100
-@@ -125,8 +125,8 @@
- inst_data java-utils/maven_depmap.py "${javadir}-utils"
+--- javapackages-4.6.0/install.0100~	2017-05-12 21:28:20.386262918 +0200
++++ javapackages-4.6.0/install	2017-05-12 21:29:07.980646313 +0200
+@@ -127,8 +127,8 @@ inst_data java-utils/maven_depmap.py "${
  inst_data java-utils/pom_editor.py "${javadir}-utils"
+ inst_data java-utils/request-artifact.py "${javadir}-utils"
  
 -inst_data target/macros.jpackage "${rpmconfigdir}/macros.d"
 -inst_data target/macros.fjava "${rpmconfigdir}/macros.d"
@@ -11,12 +11,3 @@
  
  inst_data target/build-classpath.1 "${mandir}/man1"
  inst_data target/build-jar-repository.1 "${mandir}/man1"
-@@ -173,7 +173,7 @@
- inst_config etc/javapackages-config.json "${javaconfdir}"
- 
- exec >files-local
--inst_data target/macros.xmvn "${rpmconfigdir}/macros.d"
-+inst_data target/macros.xmvn "${sysconfdir}/rpm"
- 
- inst_data java-utils/mvn_alias.py "${javadir}-utils"
- inst_data java-utils/mvn_artifact.py "${javadir}-utils"
