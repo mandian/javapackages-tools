@@ -2,7 +2,7 @@
 
 Name:           javapackages-tools
 Version:        4.6.0
-Release:        1
+Release:        2
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -101,7 +101,7 @@ artifact resolution using XMvn resolver.
 
 %package -n python-javapackages
 Summary:        Module for handling various files for Java packaging
-Requires:       python-pyxb = 1.2.4
+Requires:       python-pyxb
 Requires:       python-lxml
 Requires:       python-six
 Obsoletes:      python3-javapackages < %{version}-%{release}
