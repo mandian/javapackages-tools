@@ -1,5 +1,7 @@
 %bcond_without bootstrap
 
+%bcond_without gradle
+
 Name:           javapackages-tools
 Version:        4.6.0
 Release:        2
@@ -88,6 +90,19 @@ Requires:       maven-surefire-provider-testng
 %description -n maven-local
 This package provides macros and scripts to support packaging Maven artifacts.
 
+%if %{with gradle}
+%package -n gradle-local
+Summary:        Local mode for Gradle
+Requires:       %{name} = %{version}-%{release}
+Requires:       javapackages-local = %{version}-%{release}
+Requires:       gradle >= 2.2.1-2
+Requires:       xmvn-connector-gradle >= 2
+
+%description -n gradle-local
+This package implements local mode for Gradle, which allows artifact
+resolution using XMvn resolver.
+%endif
+
 %package -n ivy-local
 Summary:        Local mode for Apache Ivy
 Requires:       %{name} = %{version}-%{release}
@@ -141,6 +156,12 @@ pushd python
 %{__python} setup.py build
 popd
 
+%if %{without gradle}
+rm -rf %{buildroot}%{_bindir}/gradle-local
+rm -rf %{buildroot}%{_datadir}/gradle-local
+rm -rf %{buildroot}%{_mandir}/man7/gradle_build.7
+%endif
+
 %install
 ./install
 sed -e 's/.[17]$/&.gz/' -e 's/.py$/&*/' -i files-*
@@ -176,6 +197,10 @@ install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
 %{_datadir}/gradle-local
 
 %files -n maven-local -f files-maven
+
+%if %{with gradle}
+%files -n gradle-local -f files-gradle
+%endif
 
 %files -n ivy-local -f files-ivy
 
