@@ -159,7 +159,7 @@ popd
 %if %{without gradle}
 rm -rf %{buildroot}%{_bindir}/gradle-local
 rm -rf %{buildroot}%{_datadir}/gradle-local
-rm -rf %{buildroot}%{_mandir}/man7/gradle_build.7
+#rm -rf %{buildroot}%{_mandir}/man7/gradle_build.7
 %endif
 
 %install
@@ -193,8 +193,6 @@ install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
 %{_prefix}/lib/rpm/%{name}.sh
 
 %files -n javapackages-local -f files-local
-%{_bindir}/gradle-local
-%{_datadir}/gradle-local
 
 %files -n maven-local -f files-maven
 
