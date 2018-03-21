@@ -3,20 +3,19 @@
 %bcond_without gradle
 
 Name:           javapackages-tools
-Version:        4.6.0
-Release:        3
+Version:        5.0.0
+Release:        1
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
 License:        BSD
 URL:            https://github.com/fedora-java/javapackages
 Source0:        https://github.com/fedora-java/javapackages/archive/%{version}.tar.gz
-Source1:        %{name}.macros
-Source2:        %{name}.sh
 
-# we need the macros in a different place in omv
-Patch100:	javapackages-4.2.0-macros.patch
-Patch101:	javapackages-4.6.0-python-3.6.patch
+Patch0:		https://src.fedoraproject.org/rpms/javapackages-tools/raw/master/f/0001-Fix-traceback-on-corrupt-zipfile.patch
+
+Patch100:	javapackages-tools-5.0.0-python-3.7.patch
+Patch101:	javapackages-tools-5.0.0-configure-parameters.patch
 BuildArch:      noarch
 
 BuildRequires:  python-devel
@@ -86,6 +85,8 @@ Requires:       maven-surefire-plugin
 Requires:       maven-surefire-provider-junit
 # testng is quite common as well
 Requires:       maven-surefire-provider-testng
+# subpackages that no longer exist
+Obsoletes:	%{name}-doc < %{EVRD}
 
 %description -n maven-local
 This package provides macros and scripts to support packaging Maven artifacts.
@@ -125,12 +126,6 @@ Obsoletes:      python3-javapackages < %{version}-%{release}
 Module for handling, querying and manipulating of various files for Java
 packaging in Linux distributions
 
-%package doc
-Summary:        Guide for Java packaging
-
-%description doc
-User guide for Java packaging and using utilities from javapackages-tools
-
 %package -n javapackages-local
 Summary:        Non-essential macros and scripts for Java packaging support
 Requires:       %{name} = %{version}-%{release}
@@ -149,7 +144,7 @@ packaging.
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
-%configure
+%configure --rpmmacrodir=%{_rpmmacrodir}
 ./build
 
 pushd python
@@ -164,37 +159,26 @@ rm -rf %{buildroot}%{_datadir}/gradle-local
 
 %install
 ./install
-sed -e 's/.[17]$/&.gz/' -e 's/.py$/&*/' -i files-*
+sed -e 's/.[17]$/&*/' -e 's/.py$/&*/' -i files-*
+
+# Don't own standard directories
+sed -i -e '/usr.lib.rpm$/d' files-*
+sed -i -e '/usr.lib.jvm$/d' files-*
 
 pushd python
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 popd
-
-%if 0%{?fedora}
-%else
-rm -fr %{buildroot}%{_datadir}/fedora-review/plugins
-for f in files-*; do
-    sort -u $f > $f.new
-    mv $f.new $f
-done
-sed -i 's|\(.*\).gz$|\1*|g' files-*
-install -D -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.d/%{name}.macros
-install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
-%endif
-
 
 %check
 # bootstrap enabled, tests failed
 ./check 3 || exit 0
 
 %files -f files-common
-%doc LICENSE
-%{_sysconfdir}/rpm/macros.d/%{name}.macros
-%{_prefix}/lib/rpm/%{name}.sh
+%license LICENSE
 
 %files -n javapackages-local -f files-local
 
-%files -n maven-local -f files-maven
+%files -n maven-local
 
 %if %{with gradle}
 %files -n gradle-local -f files-gradle
@@ -203,8 +187,6 @@ install -D -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_prefix}/lib/rpm/%{name}.sh
 %files -n ivy-local -f files-ivy
 
 %files -n python-javapackages
-%doc LICENSE
+%license LICENSE
 %{python_sitelib}/javapackages*
-
-%files doc -f files-doc
-%doc LICENSE
+%{_datadir}/java-utils/__pycache__

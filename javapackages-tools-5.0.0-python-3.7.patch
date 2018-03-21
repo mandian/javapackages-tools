@@ -1,0 +1,69 @@
+diff -up javapackages-5.0.0/test/pm_request_test.py.omv~ javapackages-5.0.0/test/pm_request_test.py
+--- javapackages-5.0.0/test/pm_request_test.py.omv~	2018-03-20 11:25:45.294818352 +0100
++++ javapackages-5.0.0/test/pm_request_test.py	2018-03-20 11:25:52.458879467 +0100
+@@ -19,7 +19,7 @@ class PmRequestTest(unittest.TestCase):
+     def test_ok(self):
+         (out, err, proc) = call_script(self.scriptpath,
+                                        ['maven', 'junit:junit'],
+-                                       extra_env=self.env, async=True)
++                                       extra_env=self.env, asynk=True)
+         conn, _ = self.sock.accept()
+         request = conn.makefile().readline().rstrip()
+         self.assertEqual(request, "install 'mvn(junit:junit)'")
+@@ -31,7 +31,7 @@ class PmRequestTest(unittest.TestCase):
+     def test_nok(self):
+         (out, err, proc) = call_script(self.scriptpath,
+                                        ['maven', 'junit:junit'],
+-                                       extra_env=self.env, async=True)
++                                       extra_env=self.env, asynk=True)
+         conn, _ = self.sock.accept()
+         request = conn.makefile().readline().rstrip()
+         self.assertEqual(request, "install 'mvn(junit:junit)'")
+@@ -43,7 +43,7 @@ class PmRequestTest(unittest.TestCase):
+     def test_jar(self):
+         (out, err, proc) = call_script(self.scriptpath,
+                                        ['maven', 'gid:aid:jar::'],
+-                                       extra_env=self.env, async=True)
++                                       extra_env=self.env, asynk=True)
+         conn, _ = self.sock.accept()
+         request = conn.makefile().readline().rstrip()
+         self.assertEqual(request, "install 'mvn(gid:aid)'")
+@@ -55,7 +55,7 @@ class PmRequestTest(unittest.TestCase):
+     def test_full_coords(self):
+         (out, err, proc) = call_script(self.scriptpath,
+                                        ['maven', 'gid:aid:ext:cla:ver'],
+-                                       extra_env=self.env, async=True)
++                                       extra_env=self.env, asynk=True)
+         conn, _ = self.sock.accept()
+         request = conn.makefile().readline().rstrip()
+         self.assertEqual(request, "install 'mvn(gid:aid:ext:cla:ver)'")
+@@ -67,7 +67,7 @@ class PmRequestTest(unittest.TestCase):
+     def test_connection_error(self):
+         (out, err, proc) = call_script(self.scriptpath,
+                                        ['maven', 'junit:junit'],
+-                                       extra_env=self.env, async=True)
++                                       extra_env=self.env, asynk=True)
+         conn, _ = self.sock.accept()
+         conn.close()
+         ret = proc.wait()
+diff -up javapackages-5.0.0/test/test_common.py.omv~ javapackages-5.0.0/test/test_common.py
+--- javapackages-5.0.0/test/test_common.py.omv~	2018-03-20 11:26:00.871951255 +0100
++++ javapackages-5.0.0/test/test_common.py	2018-03-20 11:26:03.605974588 +0100
+@@ -24,7 +24,7 @@ for var in ('PYTHONPATH', 'COVERAGE_PROC
+         SCRIPT_ENV[var] = os.environ[var]
+ 
+ 
+-def call_script(name, args, stdin=None, extra_env={}, async=False):
++def call_script(name, args, stdin=None, extra_env={}, asynk=False):
+     with open("tmpout", 'w') as outfile:
+         with open("tmperr", 'w') as errfile:
+             procargs = [sys.executable, name]
+@@ -36,7 +36,7 @@ def call_script(name, args, stdin=None,
+                                     env=env,
+                                     stdin=subprocess.PIPE,
+                                     universal_newlines=True)
+-            if async:
++            if asynk:
+                 return (outfile, errfile, proc)
+             proc.communicate(stdin)
+             ret = proc.wait()
