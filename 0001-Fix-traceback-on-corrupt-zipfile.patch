@@ -1,0 +1,35 @@
+From 0a6c462323557dbd2f2b04dc0a96412643244e35 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Wed, 16 Aug 2017 15:20:29 +0200
+Subject: [PATCH] Fix traceback on corrupt zipfile
+
+Resolves: rhbz#1481005
+---
+ python/javapackages/common/manifest.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/python/javapackages/common/manifest.py b/python/javapackages/common/manifest.py
+index 9a27ff87..5a6245b9 100644
+--- a/python/javapackages/common/manifest.py
++++ b/python/javapackages/common/manifest.py
+@@ -33,7 +33,7 @@
+ #           Michal Srb <msrb@redhat.com>
+ 
+ import zipfile
+-from zipfile import ZipFile
++from zipfile import ZipFile, BadZipfile
+ from javapackages.common.exception import JavaPackagesToolsException
+ 
+ 
+@@ -61,7 +61,7 @@ class Manifest(object):
+                 jarfile = ZipFile(self._path)
+                 if "META-INF/MANIFEST.MF" in jarfile.namelist():
+                     mf = jarfile.open("META-INF/MANIFEST.MF", "r")
+-            except IOError:
++            except (IOError, BadZipfile):
+                 pass
+         if mf is None:
+             return None
+-- 
+2.13.5
+
