@@ -4,7 +4,7 @@
 
 Name:           javapackages-tools
 Version:        5.0.0
-Release:        1
+Release:        2
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -163,6 +163,7 @@ sed -e 's/.[17]$/&*/' -e 's/.py$/&*/' -i files-*
 
 # Don't own standard directories
 sed -i -e '/usr.lib.rpm$/d' files-*
+sed -i -e '/usr.lib.rpm.fileattrs$/d' files-*
 sed -i -e '/usr.lib.jvm$/d' files-*
 
 pushd python
