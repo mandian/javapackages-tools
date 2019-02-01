@@ -3,8 +3,8 @@
 %bcond_without gradle
 
 Name:           javapackages-tools
-Version:        5.0.0
-Release:        3
+Version:        5.3.0
+Release:        1
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -12,9 +12,6 @@ License:        BSD
 URL:            https://github.com/fedora-java/javapackages
 Source0:        https://github.com/fedora-java/javapackages/archive/%{version}.tar.gz
 
-Patch0:		https://src.fedoraproject.org/rpms/javapackages-tools/raw/master/f/0001-Fix-traceback-on-corrupt-zipfile.patch
-
-Patch100:	javapackages-tools-5.0.0-python-3.7.patch
 Patch101:	javapackages-tools-5.0.0-configure-parameters.patch
 BuildArch:      noarch
 
@@ -174,10 +171,10 @@ popd
 # bootstrap enabled, tests failed
 ./check 3 || exit 0
 
-%files -f files-common
+%files -f files-tools
 %license LICENSE
 
-%files -n javapackages-local -f files-local
+%files -n javapackages-local -f files-local -f files-filesystem
 
 %files -n maven-local
 
@@ -187,7 +184,6 @@ popd
 
 %files -n ivy-local -f files-ivy
 
-%files -n python-javapackages
+%files -n python-javapackages -f files-python
 %license LICENSE
-%{python_sitelib}/javapackages*
 %{_datadir}/java-utils/__pycache__
