@@ -4,7 +4,7 @@
 
 Name:           javapackages-tools
 Version:        5.3.0
-Release:        1
+Release:        2
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -13,6 +13,7 @@ URL:            https://github.com/fedora-java/javapackages
 Source0:        https://github.com/fedora-java/javapackages/archive/%{version}.tar.gz
 
 Patch101:	javapackages-tools-5.0.0-configure-parameters.patch
+Patch102:	javapackages-5.3.0-no-fedora-deps.patch
 BuildArch:      noarch
 
 BuildRequires:  python-devel
@@ -28,6 +29,9 @@ BuildRequires:  dia
 BuildRequires:  javapackages-tools
 BuildRequires:  xmvn-resolve >= 2
 %endif
+
+# For now
+Provides:	javapackages-filesystem
 
 Requires:       coreutils
 Requires:       lua
