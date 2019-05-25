@@ -4,7 +4,7 @@
 
 Name:           javapackages-tools
 Version:        5.3.0
-Release:        2
+Release:        3
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -145,7 +145,7 @@ packaging.
 
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
 %build
-%configure --rpmmacrodir=%{_rpmmacrodir}
+%configure --rpmmacrodir=%{_sysconfdir}/rpm/macros.d
 ./build
 
 pushd python
