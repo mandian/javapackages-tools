@@ -3,7 +3,7 @@
 %bcond_without gradle
 
 Name:           javapackages-tools
-Version:        5.3.0
+Version:	5.3.1
 Release:        4
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
