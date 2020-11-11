@@ -190,4 +190,3 @@ popd
 
 %files -n python-javapackages -f files-python
 %license LICENSE
-%{_datadir}/java-utils/__pycache__
