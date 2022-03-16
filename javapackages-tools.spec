@@ -10,7 +10,7 @@ Summary:        Macros and scripts for Java packaging support
 
 License:        BSD
 URL:            https://github.com/fedora-java/javapackages
-Source0:        https://github.com/fedora-java/javapackages/archive/%{version}/%{name}-%{version}.tar.gz
+Source0:        https://github.com/fedora-java/javapackages/archive/%{version}/javapackages-%{version}.tar.gz
 
 Patch101:	javapackages-tools-5.0.0-configure-parameters.patch
 Patch102:	javapackages-5.3.0-no-fedora-deps.patch
