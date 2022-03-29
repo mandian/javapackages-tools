@@ -188,5 +188,6 @@ popd
 
 %files -n ivy-local -f files-ivy
 
-%files -n python-javapackages -f files-python
+%files -n python-javapackages
+#files -n python-javapackages -f files-python
 %license LICENSE
