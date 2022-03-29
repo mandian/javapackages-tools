@@ -4,7 +4,7 @@
 
 Name:           javapackages-tools
 Version:	5.3.1
-Release:        6
+Release:        7
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -188,5 +188,7 @@ popd
 
 %files -n ivy-local -f files-ivy
 
-%files -n python-javapackages -f files-python
+%files -n python-javapackages
 %license LICENSE
+%{python_sitelib}/javapackages-%{version}-py*.*.egg-info
+%{python_sitelib}/javapackages/
