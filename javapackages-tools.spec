@@ -189,5 +189,6 @@ popd
 %files -n ivy-local -f files-ivy
 
 %files -n python-javapackages
-#files -n python-javapackages -f files-python
 %license LICENSE
+%{python_sitelib}/javapackages-%{version}-py*.*.egg-info
+%{python_sitelib}/javapackages/
