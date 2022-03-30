@@ -190,5 +190,5 @@ popd
 
 %files -n python-javapackages
 %license LICENSE
-%{python_sitelib}/javapackages-%{version}-py*.*.egg-info
+%{python_sitelib}/javapackages-%{version}-*.egg-info
 %{python_sitelib}/javapackages/
