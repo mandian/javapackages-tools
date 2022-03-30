@@ -1,10 +1,13 @@
 %bcond_without bootstrap
-
 %bcond_without gradle
 
+# Don't generate requires on jpackage-utils and java-headless for
+# provided pseudo-artifacts: com.sun:tools and sun.jdk:jconsole.
+%global __requires_exclude_from %{?__requires_exclude_from:%__requires_exclude_from|}/maven-metadata/javapackages-metadata.xml$
+
 Name:           javapackages-tools
-Version:	5.3.1
-Release:        7
+Version:	6.0.0
+Release:        1
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
@@ -12,7 +15,6 @@ License:        BSD
 URL:            https://github.com/fedora-java/javapackages
 Source0:        https://github.com/fedora-java/javapackages/archive/%{version}.tar.gz
 
-Patch101:	javapackages-tools-5.0.0-configure-parameters.patch
 Patch102:	javapackages-5.3.0-no-fedora-deps.patch
 BuildArch:      noarch
 
@@ -52,42 +54,16 @@ This package provides macros and scripts to support Java packaging.
 Summary:        Macros and scripts for Maven packaging support
 Requires:       %{name} = %{version}-%{release}
 Requires:       javapackages-local = %{version}-%{release}
-Requires:       maven
-Requires:       xmvn >= 2
-Requires:       xmvn-mojo >= 2
-Requires:       xmvn-connector-aether >= 2
-# POM files needed by maven itself
-Requires:       apache-commons-parent
-Requires:       apache-parent
-Requires:       geronimo-parent-poms
-Requires:       httpcomponents-project
-Requires:       jboss-parent
-Requires:       jvnet-parent
-Requires:       maven-parent
-Requires:       maven-plugins-pom
-Requires:       mojo-parent
-Requires:       objectweb-pom
-Requires:       plexus-components-pom
-Requires:       plexus-pom
-Requires:       plexus-tools-pom
-Requires:       sonatype-oss-parent
-Requires:       weld-parent
+%if %{without bootstrap}
+Requires:	%{_bindir}/xmvn
+Requires:	mvn(org.fedoraproject.xmvn:xmvn-mojo)
 # Common Maven plugins required by almost every build. It wouldn't make
 # sense to explicitly require them in every package built with Maven.
-Requires:       maven-assembly-plugin
-Requires:       maven-compiler-plugin
-Requires:       maven-enforcer-plugin
-Requires:       maven-jar-plugin
-Requires:       maven-javadoc-plugin
-Requires:       maven-resources-plugin
-Requires:       maven-surefire-plugin
-# Tests based on JUnit are very common and JUnit itself is small.
-# Include JUnit provider for Surefire just for convenience.
-Requires:       maven-surefire-provider-junit
-# testng is quite common as well
-Requires:       maven-surefire-provider-testng
-# subpackages that no longer exist
-Obsoletes:	%{name}-doc < %{EVRD}
+Requires:	mvn(org.apache.maven.plugins:maven-compiler-plugin)
+Requires:	mvn(org.apache.maven.plugins:maven-jar-plugin)
+Requires:	mvn(org.apache.maven.plugins:maven-resources-plugin)
+Requires:	mvn(org.apache.maven.plugins:maven-surefire-plugin)
+%endif
 
 %description -n maven-local
 This package provides macros and scripts to support packaging Maven artifacts.
@@ -139,11 +115,9 @@ This package provides non-essential macros and scripts to support Java
 packaging.
 
 %prep
-%setup -q -n javapackages-%{version}
-
-%autopatch -p1
-
+%autosetup -p1 -n javapackages-%{version}
 sed -i 's#/bin/objectweb-asm3-processor#/usr/bin/objectweb-asm3-processor#' bin/shade-jar
+
 %build
 %configure --rpmmacrodir=%{_sysconfdir}/rpm
 ./build
@@ -178,7 +152,7 @@ popd
 %files -f files-tools
 %license LICENSE
 
-%files -n javapackages-local -f files-local -f files-filesystem
+%files -n javapackages-local -f files-local -f files-filesystem -f files-generators
 
 %files -n maven-local
 
