@@ -7,7 +7,7 @@
 
 Name:           javapackages-tools
 Version:	6.0.0
-Release:        1
+Release:        2
 Group:		Development/Java
 Summary:        Macros and scripts for Java packaging support
 
