@@ -1,0 +1,77 @@
+--- a/python/javapackages/common/manifest.py
++++ b/python/javapackages/common/manifest.py
+@@ -67,7 +67,7 @@
+             return None
+         content = mf.read()
+         mf.close()
+-        return content.decode("utf-8")
++        return content
+ 
+     def get_requires(self):
+         reqs = []
+@@ -82,20 +82,21 @@
+         symbolicName = ""
+         version = ""
+         for line in self._normalize_manifest():
+-            if line.startswith("Bundle-SymbolicName:"):
+-                symbolicName = line.split(':')[1].strip()
+-                symbolicName = symbolicName.split(";")[0].strip()
+-            if line.startswith("Bundle-Version:"):
+-                versions = line.split(':')[1].strip()
+-                versions = versions.split('.')[0:3]
+-                version = ".".join(versions)
++            if line.startswith(b"Bundle-SymbolicName:"):
++                symbolicName = line.split(b':')[1].strip()
++                symbolicName = (symbolicName.split(b";")[0].strip()).decode()
++                #symbolicName = symbolicName.split(b";")[0].strip()
++            if line.startswith(b"Bundle-Version:"):
++                versions = line.split(b':')[1].strip()
++                versions = versions.split(b'.')[0:3]
++                version = (b".".join(versions)).decode()
+         return symbolicName, version
+ 
+     def _normalize_manifest(self):
+         lines = []
+         manifest = self._manifest.splitlines()
+         for line in manifest:
+-            if line.startswith(' '):
++            if line.startswith(b' '):
+                 lines[-1] += line.strip()
+             else:
+                 lines.append(line.strip())
+@@ -103,7 +104,7 @@
+ 
+     def _parse_manifest(self):
+         headers = {}
+-        DELIM = ": "
++        DELIM = b": "
+         for line in self._normalize_manifest():
+             split = line.split(DELIM)
+             if len(split) > 1:
+@@ -113,20 +114,20 @@
+ 
+     def _split_bundle_name(self, bundles):
+         bundlenames = []
+-        bundleline = ""
+-        for bundle in bundles.split(','):
++        bundleline = b""
++        for bundle in bundles.split(b','):
+             if not bundle:
+                 continue
+-            if "(" in bundle or "[" in bundle:
++            if b"(" in bundle or b"[" in bundle:
+                 bundleline = bundle
+                 continue
+             if bundleline:
+                 bundle = bundleline + bundle
+-            if ":=optional" in bundle:
++            if b":=optional" in bundle:
+                 bundleline = ""
+                 continue
+-            if ";" in bundle:
+-                bundlenames.append(bundle.split(";")[0].strip())
++            if b";" in bundle:
++                bundlenames.append(bundle.split(b";")[0].strip())
+             else:
+                 bundlenames.append(bundle.strip())
+             bundleline = ""
