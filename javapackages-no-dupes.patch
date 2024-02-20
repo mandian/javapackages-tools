@@ -1,0 +1,11 @@
+diff -up javapackages-6.2.0/install.omv~ javapackages-6.2.0/install
+--- javapackages-6.2.0/install.omv~	2024-02-20 01:52:26.633525723 +0100
++++ javapackages-6.2.0/install	2024-02-20 01:52:37.629648219 +0100
+@@ -78,7 +78,6 @@ dir "${javaconfdir}/security"
+ dir "${javaconfdir}/security/security.d"
+ dir "${jvmdir}"
+ dir "${jvmprivdir}"
+-dir "${jvmlibdir}"
+ dir "${jvmdatadir}"
+ dir "${jvmsysconfdir}"
+ dir "${jvmcommonlibdir}"

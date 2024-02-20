@@ -1,0 +1,13 @@
+{
+    "maven.req": {
+        "always_generate": [
+            "(jdk-current or java-21-openjdk or java-20-openjdk or java-19-openjdk or java-1.8.0-openjdk)"
+        ],
+        "java_requires": {
+            "skip": true
+        },
+        "java_devel_requires": {
+            "skip": true
+        }
+    },
+}
