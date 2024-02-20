@@ -8,7 +8,7 @@
 
 Name:           javapackages-tools
 Version:        6.2.0
-Release:        1
+Release:        2
 Summary:        Macros and scripts for Java packaging support
 License:        BSD-3-Clause
 URL:            https://github.com/fedora-java/javapackages
@@ -195,6 +195,9 @@ cp -p %{SOURCE17} %{buildroot}%{maven_home}/conf/toolchains.xml-openjdk17
 cp -p %{SOURCE21} %{buildroot}%{maven_home}/conf/toolchains.xml-openjdk21
 
 install -p -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/java/javapackages-config.json
+
+# Don't own standard directories
+sed -i -e '/fileattrs$/d' files-generators
 
 %if 0%{?flatpak}
 # make both /app (runtime deps) and /usr (build-only deps) builds discoverable
